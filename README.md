@@ -105,7 +105,7 @@ unicycler -1 short_reads_1.fastq.gz -2 short_reads_2.fastq.gz -o output_dir
 Input: assemblies, assembly.fasta
 Output: annotated assemblies, DNA1_merged_
 
-For each merged read, Unicycler outputs a folder that contains the assembly. For this reason, we define a base folder that contain all folders output from Unicycler
+For each merged read, Unicycler outputs a folder that contains the assembly. For this reason, we define a base directory that contain all subfolders output from Unicycler
 ```
 BASE_DIR="/assembled_folder"
 ```
@@ -117,6 +117,41 @@ Ensure annotation directory exist
 ```
 mkdir -p "$ANNOTATION_BASE_DIR"
 ```
+Define a loop through each subfolder in the base directory, and construct the path to the assembly file within the base directory
+```
+for dir in "$BASE_DIR"/*/; do
+    echo "Checking directory: $dir"
+    assembly_file="${dir}assembly.fasta"
+    echo "Looking for assembly file at: $assembly_file"
+```
+Check if the assembly.fasta exists, if exists, then extract the sample name from the directory path
+```
+    if [[ -f "$assembly_file" ]]; then
+        sample_name=$(basename "$dir")
+```
+Define and create the output directory (folder name) for annotations based on the sample name
+```
+        outdir="$ANNOTATION_BASE_DIR/${sample_name}_annotation"
+        echo "Creating output directory at: $outdir"
+        mkdir -p "$outdir"
+```
+Run Prokka for annotation in reference genome priority mode with the reference genome ecoli_k12.gbff, specifying the input assembly file and output directory
+```
+        echo "Running Prokka for $sample_name"
+        prokka --force --proteins "/reference_genome/ecoli_k12.gbff" --outdir "$outdir" --prefix "$sample_name" "$assembly_file"
+        echo "Prokka annotation completed for $sample_name"
+    else
+        echo "assembly.fasta not found in $dir"
+    fi
+done
+```
+Additional option of Prokka, in default mode: prokka --outdir "$outdir" --prefix "$prefix" "${dir}/assembly.fasta"
+## Assemblies quality assessment
+
+
+
+
+
 
 
 
