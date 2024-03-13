@@ -180,7 +180,7 @@ After preparation of assemblies from two sources, then run the QUAST on them. "-
     fi
 done
 ```
-## Analyzing all assemblies from the same pipelines
+## Analyzing all assemblies that from the same pipelines
 MetaQUAST is another version of QUAST used for multiple assemblies, it generates several tables and graphs of different metrics for all assemblies
 Locates to the directory of all assemblies
 ```
