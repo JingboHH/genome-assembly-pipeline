@@ -183,7 +183,19 @@ After preparation of assemblies from two sources, then run the QUAST on them. "-
     fi
 done
 ```
-
+## Analyzing all assemblies from the same pipelines
+MetaQUAST is another version of QUAST used for multiple assemblies, it generates several tables and graphs of different metrics for all assemblies
+Locates to the directory of all assemblies
+```
+cd assemblies_folder
+```
+Run MetaQUAST for all assemblies
+```
+metaquast.py $(ls *.fasta)
+-r /ecoliK12.fna
+-g /ecoliK12.gff
+-o output
+-t 1
 
 
 
