@@ -1,4 +1,4 @@
-# De novo assembly pipeline for paired-end sequencing reads
+## De novo assembly pipeline for paired-end sequencing reads
 ## Preparation
 
 Input files: paired-end reads sequenced by Illumina platform
