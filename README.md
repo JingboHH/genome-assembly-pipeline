@@ -1,7 +1,4 @@
 # De novo assembly pipeline for paired-end sequencing reads
-
-
-
 ## Preparation
 
 Input files: paired-end reads sequenced by Illumina platform
@@ -196,6 +193,8 @@ metaquast.py $(ls *.fasta)
 -g /ecoliK12.gff
 -o output
 -t 1
+```
+
 
 
 
