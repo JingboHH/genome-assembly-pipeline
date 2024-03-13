@@ -174,8 +174,8 @@ Extract the sample name from basename by removing the suffix "_merged_unicycler_
 ```
 After preparation of assemblies from two sources, then run the QUAST on them. "-r" means the reference genome for assembly quality, such as NGA50, or misassemblies metrics; while "-g" means the reference Genbank for gene assessment, such as the CDS number and gene number. "-t" defines the number of threads when running QUAST, "-1" means for single-thread: QUAST does not work with multi-threading when using the latest version of python, which is using python 3.7 and below.
 ```
- if [[ -f "$new_assembly_file" && -f "$exist_assembly_file" ]]; then
-        quast.py -r /ecoli_k12.fna -g "/ecoli_k12.gbff" -o "$output_dir" "$new_assembly_file" "$exist_assembly_file" -t -1
+    if [[ -f "$new_assembly_file" && -f "$exist_assembly_file" ]]; then
+        quast.py -t 1 -G "/path/to/reference/genome/ecoli_k12.gbff" -o "$output_dir" "$new_assembly_file" "$exist_assembly_file"
         echo "QUAST analysis completed for $sample_name"
     else
         [[ ! -f "$new_assembly_file" ]] && echo "New assembly .gfa file not found in $dir"
