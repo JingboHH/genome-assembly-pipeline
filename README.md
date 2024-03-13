@@ -147,6 +147,42 @@ done
 ```
 Additional option of Prokka, in default mode: prokka --outdir "$outdir" --prefix "$prefix" "${dir}/assembly.fasta"
 ## Assemblies quality assessment
+## Comparing assemblies from different assemblers or pipelines
+Input: assembly.fasta in each output subfolder from Unicycler
+Output: QUAST analysis report
+Define input and output directories
+```
+NEW_ASSEMBLY_DIR=/new_assemblies/
+EXIST_ASSEMBLY_DIR_2=/exist_assemblies/
+QUAST_OUTPUT_DIR=/quast_output/
+```
+Ensure QUAST output directory exists
+```
+mkdir -p "$QUAST_OUTPUT_DIR"
+```
+Define a loop to thorough all subfolders in NEW_ASSEMBLY_DIR
+```
+for dir in "$NEW_ASSEMBLY_DIR"/*/; do
+    echo "Checking directory: $dir"
+```
+Extract the sample name from basename by removing the suffix "_merged_unicycler_output", and using sample name to define the name of new_assemly and exist_assembly, as well as output subdirectories
+```
+    sample_name=$(basename "$dir" | sed 's/_merged_unicycler_output//')
+    new_assembly_file="${dir}assembly.fasta"
+    exist_assembly_file="$EXIST_ASSEMBLY_DIR/${sample_name}.fasta"
+    output_dir="$QUAST_OUTPUT_DIR/quast_results_${sample_name}"
+```
+After preparation of assemblies from two sources, then run the QUAST on them. "-r" means the reference genome for assembly quality, such as NGA50, or misassemblies metrics; while "-g" means the reference Genbank for gene assessment, such as the CDS number and gene number. "-t" defines the number of threads when running QUAST, "-1" means for single-thread: QUAST does not work with multi-threading when using the latest version of python, which is using python 3.7 and below.
+```
+ if [[ -f "$new_assembly_file" && -f "$exist_assembly_file" ]]; then
+        quast.py -r /ecoli_k12.fna -g "/ecoli_k12.gbff" -o "$output_dir" "$new_assembly_file" "$exist_assembly_file" -t -1
+        echo "QUAST analysis completed for $sample_name"
+    else
+        [[ ! -f "$new_assembly_file" ]] && echo "New assembly .gfa file not found in $dir"
+        [[ ! -f "$exist_assembly_file" ]] && echo "Exist assembly .fasta file not found for $sample_name"
+    fi
+done
+```
 
 
 
